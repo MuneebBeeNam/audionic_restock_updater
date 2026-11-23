@@ -1,0 +1,35 @@
+name: Audionic Restock Monitor
+
+on:
+  schedule:
+    # Runs every 15 minutes (UTC)
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub web UI
+
+jobs:
+  check-stock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Stock Check
+        env:
+          PRODUCT_URL: ${{ secrets.PRODUCT_URL || 'https://audionic.co/products/trance-infinity' }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          python check_stock.py

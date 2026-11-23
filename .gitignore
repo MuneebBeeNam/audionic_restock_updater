@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env
+stock_state.json
+
+# Virtual environment
+venv/
+.venv/
+env/
