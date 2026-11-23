@@ -216,6 +216,20 @@ def execute_check(cfg: dict, force_notify: bool = False):
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"[{now_str}] Checking stock for: {cfg['product_url']}")
 
+    # Print configured channels so user can verify secrets are picked up in GitHub Actions
+    channels = []
+    if cfg.get("ntfy_topic"):
+        channels.append(f"ntfy (topic: {cfg['ntfy_topic']})")
+    if cfg.get("telegram_token"):
+        channels.append("Telegram")
+    if cfg.get("discord_webhook"):
+        channels.append("Discord")
+
+    if channels:
+        print(f"[i] Active notification channel(s): {', '.join(channels)}")
+    else:
+        print("[!] WARNING: No notification channels found! Did you set the NTFY_TOPIC secret in GitHub?")
+
     result = check_product(cfg["product_url"])
     if not result.get("success"):
         print(f"[-] Failed to fetch product info: {result.get('error')}")
