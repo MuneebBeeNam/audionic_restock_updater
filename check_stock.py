@@ -97,7 +97,7 @@ def send_discord_notification(webhook_url: str, title: str, message: str, url: s
         return False
     try:
         payload = {
-            "content": f"🚨 **{title}**\n{message}\n[**Open Product Page**]({url})",
+            "content": f"@everyone 🚨 **{title}**\n{message}\n👉 **Buy Link:** {url}",
             "embeds": [
                 {
                     "title": title,
